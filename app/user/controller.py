@@ -5,7 +5,6 @@ from flask.views import MethodView
 from app.utils.filters import filter
 #from app.utils.filters import parser
 
-# Message é o responsável por enviar os emails
 #from flask_mail import Message
 #from app.extensions import mail, jwt
 #import bcrypt
@@ -24,30 +23,11 @@ class UserCreate(MethodView): #/user
         user = user_services.create(request.json, schema)
         user.role_specify()
 
-        # Posso colocar ou não essa parte do sendgrid
-        '''mensagem = Message(
-            sender = "gabrielmarinhobom@poli.ufrj.br"
-            recipients = [user.email],
-            subject = "Bem vindo ao site"
-            html = render_template('email-boas-vindas.html', nome=user.nome)
-        )'''
-
         return schema.dump(user), 201
 
 
 class UserList(MethodView): #/user/lista
-
-    '''def get(self):
-
-        pagina = request.args.get('pag', 1, type=int)
-
-        users = User.query.paginate(page=pagina, per_page=5)
-
-        schema = UserSchema(many=True)
-
-        return jsonify(schema.dump(users.items)), 200'''
-    
-    # traduzir alguns termos para portugues     
+   
     def get(self):
         schema = filter.getSchema(qs=request.args, schema_cls=UserSchema, many=True)
         users = User.query.all()
@@ -108,8 +88,6 @@ class UserId(MethodView): #/user/<int:id>
         User.delete(user)
         return {}, 204
 
-
-# Essa classe com a funcção abaixo, cria o login do usuário
 class UserLogin(MethodView): #/login
 
     def post(self):

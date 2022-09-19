@@ -23,7 +23,6 @@ class User(BaseModel):
 
     role_user = db.Column(db.String(20))
 
-    # Inserir as relações:
     #One-to-many Relationships
     arquivos = db.relationship('Arquivos', back_populates = 'user', uselist = False)
     administrador = db.relationship('Administrador', back_populates = 'user', uselist = False)

@@ -6,10 +6,7 @@ from app.auth.routes import auth_api
 from app.usuario_comum.routes import usuariocomum_api
 from app.administrador.routes import administrador_api
 from app.arquivos.routes import arquivo_api
-#para o storage
 from app.file.routes import file_api
-from app.storageDireto.routes import storageDireto_api
-from app.storagePreSigned.routes import storagePreSigned_api
 
 
 # Essa função serve para criar um app, uma aplicação
@@ -37,8 +34,7 @@ def create_app():
 
     # para o storage
     app.register_blueprint(file_api)
-    app.register_blueprint(storageDireto_api)
-    app.register_blueprint(storagePreSigned_api)
+    
 
 
 
