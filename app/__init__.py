@@ -38,5 +38,4 @@ def create_app():
 
 
 
-    # estamos retornando a aplicação feita
     return app
