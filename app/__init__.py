@@ -8,15 +8,9 @@ from app.administrador.routes import administrador_api
 from app.arquivos.routes import arquivo_api
 from app.file.routes import file_api
 
-
-# Essa função serve para criar um app, uma aplicação
 def create_app():
 
     app = Flask(__name__, instance_relative_config=True)
-    # rever essa linha de cdg abaixo
-    #app.config['SECRET_KEY'] = 'Fluxo'
-
-    # quer dizer que o app vai ter as configurações do objeto da classe Config
     app.config.from_object(ConfigProd)
 
     db.init_app(app)
@@ -35,7 +29,5 @@ def create_app():
     # para o storage
     app.register_blueprint(file_api)
     
-
-
 
     return app

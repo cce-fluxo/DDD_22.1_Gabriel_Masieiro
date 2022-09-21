@@ -1,4 +1,3 @@
-# guardar arq sensíveis do usuario
 class Sensive:
     # onde está o banco de dados
 
@@ -7,6 +6,7 @@ class Sensive:
     DEBUG = True
 
     JSON_SORT_KEYS = False
+    
     #Chave
     JWT_SECRET_KEY = "ERQTYUIODFGHJKCVBNMFFDHJSKYDEIQWSOKEDUQJWI"
     # aplicação do sendgrid

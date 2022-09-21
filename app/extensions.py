@@ -4,7 +4,8 @@ from flask_marshmallow import Marshmallow
 from flask_mail import Mail
 from flask_jwt_extended import JWTManager
 
-# As linhas de código abaixo estão instanciando cada objeto.
+# instanciando cada objeto
+
 # inicializa o banco de dados
 db = SQLAlchemy()
 # inicializa migrate
