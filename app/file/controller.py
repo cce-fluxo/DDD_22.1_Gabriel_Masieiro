@@ -4,7 +4,6 @@ from app.file.models import File
 from app.file.schemas import FileSchema
 from app.extensions import db
 from sqlalchemy import exc
-#import uuid
 from app.author.models import Author
 from app.tag.models import Tag
 from app.user.model import User

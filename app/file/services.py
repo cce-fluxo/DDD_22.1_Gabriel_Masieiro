@@ -7,4 +7,4 @@ class FileServices(BaseCRUDServices[File, FileSchema]):
     pass
 
 
-user_services = FileServices(File)
+file_services = FileServices(File)

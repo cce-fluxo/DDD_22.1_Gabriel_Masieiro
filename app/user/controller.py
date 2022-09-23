@@ -4,7 +4,6 @@ from flask import  request
 from flask.views import MethodView
 from app.utils.filters import filter
 #from app.utils.filters import parser
-
 #from flask_mail import Message
 #from app.extensions import mail, jwt
 #import bcrypt

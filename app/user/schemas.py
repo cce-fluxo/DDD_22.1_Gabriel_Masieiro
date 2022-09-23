@@ -1,10 +1,6 @@
 from ..extensions import ma
 from ..user.model import User
 
-# Importar caso o user tenha relação com as tabelas, como os arquivos por exemplo
-# from ..arquivos.schemas import ArquivosSchema
-
-
 class UserSchema(ma.SQLAlchemySchema):
 
     class Meta:
@@ -22,6 +18,8 @@ class UserSchema(ma.SQLAlchemySchema):
     email = ma.Email(required=True)
     senha = ma.String(load_only=True, required=True)
     role_user = ma.String(required=True)
+    createdPinTimestamp = ma.DateTime(dump_only=True)
+    verificationPinHash = ma.String(dump_only=True)
 
     usuario_comum = ma.Nested('UsuarioComumSchema')
     administrador = ma.Nested('AdministradorSchema')
@@ -32,3 +30,7 @@ class LoginSchema(ma.Schema):
 
     email = ma.Email(required=True)
     senha = ma.String(load_only=True, required=True)
+
+class TokenSchema(ma.Schema):
+    email = ma.Email(required=True)
+    token = ma.Integer(required=True)

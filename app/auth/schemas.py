@@ -1,7 +1,4 @@
-from app.extensions import ma
-
-#from app.user.schemas import UserSchema
-
+from ..extensions import ma
 
 # Verifica se existe erro no input
 class LoginSchema(ma.Schema):

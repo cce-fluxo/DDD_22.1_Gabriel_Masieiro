@@ -5,9 +5,7 @@ from app.user.routes import user_api
 from app.auth.routes import auth_api
 from app.usuario_comum.routes import usuariocomum_api
 from app.administrador.routes import administrador_api
-from app.arquivos.routes import arquivo_api
 from app.storageDireto.routes import storageDireto_api
-from app.storagePreSigned.routes import storagePreSigned_api
 from app.file.routes import file_api
 from app.tag.routes import tag_api
 from app.author.routes import author_api
@@ -30,14 +28,11 @@ def create_app():
     app.register_blueprint(auth_api)
     app.register_blueprint(usuariocomum_api)
     app.register_blueprint(administrador_api)
-    app.register_blueprint(arquivo_api)
     app.register_blueprint(tag_api)
     app.register_blueprint(author_api)
 
 
-
     # para o storage
-    app.register_blueprint(storagePreSigned_api)
     app.register_blueprint(storageDireto_api)
     app.register_blueprint(file_api)
     

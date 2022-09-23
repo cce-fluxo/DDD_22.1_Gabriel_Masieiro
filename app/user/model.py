@@ -4,7 +4,7 @@ from app.usuario_comum.model import UsuarioComum
 from app.extensions import db
 import bcrypt 
 from flask_jwt_extended import create_access_token, create_refresh_token, decode_token
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 class User(BaseModel):
     
@@ -19,16 +19,17 @@ class User(BaseModel):
     cpf = db.Column(db.String(15), nullable = False, unique = True)
     email = db.Column(db.String(70), nullable = False, unique = True, index = True)
     senha_hash = db.Column(db.LargeBinary(128))
-
+    verificationPinHash = db.Column(db.LargeBinary(128))
+    createdPinTimestamp = db.Column(db.DateTime) 
     role_user = db.Column(db.String(20))
 
     #One-to-many Relationships
-    arquivos = db.relationship('Arquivos', back_populates = 'user', uselist = False)
     administrador = db.relationship('Administrador', back_populates = 'user', uselist = False)
     usuario_comum = db.relationship('UsuarioComum', back_populates = 'user', uselist = False)
 
 
     # Abaixo será implementado o código para especificar o usuário que está logando
+    # User Password
     @property
     def role(self):
 
@@ -97,3 +98,16 @@ class User(BaseModel):
         user = User.query.get(data['identity'])
 
         return user
+
+    @property
+    def verificationPin(self):
+        raise AttributeError('verification pin is not a readable attribute.')
+        
+    @verificationPin.setter
+    def verificationPin(self, verificationPin):
+        self.createdPinTimestamp = datetime.now()
+        self.verificationPinHash = bcrypt.hashpw(verificationPin.encode(), bcrypt.gensalt())
+    
+    def verify_pin(self, verificationPinReceived):
+        timeDifference = round((datetime.now() - self.createdPinTimestamp).seconds / 60)
+        return bcrypt.checkpw(verificationPinReceived.encode(), self.verificationPinHash) and timeDifference <= 5

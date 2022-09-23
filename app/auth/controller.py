@@ -1,16 +1,15 @@
 from flask import request
 from flask.views import MethodView
-from ..user.schemas import LoginSchema, UserSchema
-from ..user.services import user_services
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
-from flask import request
-from flask.views import MethodView
 from random import randint
 from app.user.model import User
-from app.auth.schemas import LoginSchema, NewPasswordSchema
-from app.user.schemas import UserSchema
-from app.config import Config
+
+from ..user.schemas import LoginSchema, UserSchema
+from ..user.services import user_services
+from ..user.model import User
+from ..auth.schemas import NewPasswordSchema
+
 from marshmallow.exceptions import ValidationError
 
 class Login(MethodView): #/login
@@ -19,18 +18,16 @@ class Login(MethodView): #/login
 
         schema = LoginSchema()
         data = schema.load(request.json)
-       
         user = user_services.get_by_email(data['email'])
 
         if not user or not user.verify_password(data['senha']):
-            return {"Error":"Usuário ou senha inválidos"}, 401
+            return {"Error":"Usuário ou senha inválidos"}, 400
 
         if user.isAdmin == True:
             access_token = create_access_token(identity=user.id, additional_claims={"isAdmin":True})           
         elif user.isAdmin == False:
             access_token = create_access_token(identity=user.id, additional_claims={"isAdmin":False})
                 
-
         token = user.token()
         refresh_token = user.refresh_token()
 
@@ -62,22 +59,26 @@ class TokenRefresh(MethodView):
         return {
             'user': UserSchema().dump(user),
             'token': token,
-            'refresh_token': refresh_token
-        }, 200
+            'refresh_token': refresh_token}, 200
 
 class UserPasswordResetEmail(MethodView):
 
     """ Envia email com pin de trocar de senha """
     def post(self):
-        schema = LoginSchema(exclude=['password'])
-        data = schema.load(request.json)
 
-        user = user_services.get_by_email(data['email'])
+        schema = LoginSchema(exclude=['password'])
+
+        try:
+            data = schema.load(request.json)
+        except ValidationError as e:
+            return {"error": "ValidationError", 
+                    "msg": str(e)}, 400
+
+        user = User.query.filter_by(email=data['email']).first_or_404()
 
         verificationPin = str(randint(100000, 999999))
         user.verificationPin = verificationPin
         user.save()
-        
         return {"msg": "email enviado com pin",
                 "verificationPin": verificationPin,
         }, 200
@@ -86,7 +87,9 @@ class PinInput(MethodView):
 
     """ Recebe pin do usuario e verifica se é valido """
     def post(self):
+
         schema = NewPasswordSchema(exclude=['password'])
+
         try:
             data = schema.load(request.json)
         except ValidationError as e:
@@ -105,17 +108,22 @@ class PinInput(MethodView):
 class UserPasswordReset(MethodView):
 
     """ Usuario trocar de senha com pin """
+    def patch(self):
 
-    #def patch(self, user_services):
-    def patch(self, user_id):
+        schema = NewPasswordSchema()
+        try:
+            data = schema.load(request.json)
+        except ValidationError as e:
+            return {"error": "ValidationError", 
+                    "msg": str(e)}, 400
 
-        schema = NewPasswordSchema(exclude=['verificationPin'])
-        data = schema.load(request.json)
-        user = user_services.get_by_email(data['email'])
+        user = User.query.filter_by(email=data['email']).first_or_404()
 
-        # Fake it passes 5 minutes
-        user.createdPinTimestamp += timedelta(minutes=Config.VALID_VERIFICATION_PIN_TIME)
+        if not user or not user.verify_pin(data['verificationPin']):
+            return {"code_status": "Invalid user or pin"}, 401
+        
+        user.createdPinTimestamp += timedelta(minutes=5)
         user.password = data['password']
         user.save()
 
-        return {"msg": "senha atualizada"}, 200
+        return {"msg": "Password has been successfully reset"}, 200

@@ -7,5 +7,4 @@ class UserServices(BaseCRUDServices[User, UserSchema]):
     def get_by_email(self, email: str) -> User:
         return self.model.query.filter_by(email=email).first()
 
-
 user_services = UserServices(User)
