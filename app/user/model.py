@@ -4,7 +4,6 @@ from app.usuario_comum.model import UsuarioComum
 from app.extensions import db
 import bcrypt 
 from flask_jwt_extended import create_access_token, create_refresh_token, decode_token
-#from jwt_required
 from datetime import timedelta
 
 class User(BaseModel):
