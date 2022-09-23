@@ -93,11 +93,11 @@ class UserLogin(MethodView): #/login
     def post(self):
 
         schema = LoginSchema()
-        dados = schema.load(request.json)
+        data = schema.load(request.json)
 
-        user = user_services.get_by_email(dados['email'])
+        user = user_services.get_by_email(data['email'])
 
-        if not user or not user.verify_password(dados['senha']):
+        if not user or not user.verify_password(data['senha']):
             return {"Error":"Usuário ou senha inválidos"}
 
         token = create_access_token(identity = user.id)

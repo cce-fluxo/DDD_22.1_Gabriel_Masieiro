@@ -37,6 +37,8 @@ class DiretoStorage(MethodView):
         
         return {'URL': response}, 200
 
+    ''' Deleta um arquivo do storage'''
     def delete(self, file_name):
-        storage.delete_object(file_key=file_name)
-        return {'msg':'Arquivo deletado com sucesso!'}, 200
+
+        response = storage.delete_object(file_key=file_name)
+        return {'respoonse':response}, 200

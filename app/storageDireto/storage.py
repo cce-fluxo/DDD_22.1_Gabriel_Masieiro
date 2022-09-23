@@ -15,6 +15,7 @@ class Storage:
         'webm':'video/webm',
         'pdf':'application/pdf'
     }
+    
     # mudar os atributos de config abaixo
     client = session.client ('s3',
                             region_name = config.AWS_REGION,
