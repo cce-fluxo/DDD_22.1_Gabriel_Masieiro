@@ -17,7 +17,7 @@ class ConfigDev:
     DEBUG=True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///data.sqlite'
-    JWT_SECRET_KEY = environ.getenv("JWT_SECRET_KEY")
+    JWT_SECRET_KEY = environ.get("JWT_SECRET_KEY")
 
 class ConfigProd:
     DEBUG = True
